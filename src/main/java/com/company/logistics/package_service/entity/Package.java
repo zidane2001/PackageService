@@ -6,8 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -17,27 +18,26 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "Package")
-public class PacKage {
+public class Package {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-  
+
     @Column(name = "description")
     @NotBlank(message = "Description is mandatory")
     private String description;
 
     @Column(name = "weight")
-    @NotBlank(message = "Weight is mandatory")
-    @Size(max = 10000)
+    @NotNull(message = "Weight is mandatory")
+    @Max(value = 10000, message = "Weight must not exceed 10000")
     private Double weight;
 
     @Column(name = "fragile")
     private Boolean isFragile;
 
-    // status is a type enum
     @Column(name = "status")
-    @NotBlank(message = "Status is mandatory")
-    PackageStatus status ;
+    @NotNull(message = "Status is mandatory")
+    private PackageStatus status;
 
 }

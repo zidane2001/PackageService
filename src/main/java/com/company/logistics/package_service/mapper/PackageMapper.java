@@ -1,22 +1,17 @@
 package com.company.logistics.package_service.mapper;
-import com.company.logistics.package_service.dto.request.CreatePackageRequest;
-import com.company.logistics.package_service.entity.PacKage;
 
-public class PackageMapper {
+import com.company.logistics.package_service.dto.PackageRequestDto;
+import com.company.logistics.package_service.dto.PackageResponseDto;
+import com.company.logistics.package_service.entity.Package;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-    private PackageMapper() {} // empty constructor in private ! to avoid instantiation of the class 
+@Mapper(componentModel = "spring")
+public interface PackageMapper {
 
-    // Describe the mapper class implementaion with builder pattern with comments :
-    // The mapper class is used to convert the request object to the entity object.
-    // The builder pattern is used to create the entity object.     
+    @Mapping(target = "id", ignore = true)
+    Package toEntity(PackageRequestDto request);
 
-    public static PacKage toEntity(CreatePackageRequest request) {
-        return PacKage.builder()
-                .description(request.getDescription())
-                .weight(request.getWeight())
-                .isFragile(request.getIsfragile())
-                .status(request.getStatus())
-                .build();
-    }
+    PackageResponseDto toDto(Package entity);
 
 }

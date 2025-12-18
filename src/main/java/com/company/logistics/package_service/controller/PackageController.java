@@ -6,12 +6,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.company.logistics.package_service.dto.request.CreatePackageRequest;
-import com.company.logistics.package_service.entity.PacKage;
+
+import com.company.logistics.package_service.dto.PackageRequestDto;
+import com.company.logistics.package_service.dto.PackageResponseDto;
 import com.company.logistics.package_service.service.PackageService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 
 @RestController
 @RequestMapping("/api/packages")
@@ -20,13 +21,10 @@ public class PackageController {
 
     private final PackageService packageService;
 
-    
-
     @PostMapping
-    public ResponseEntity<PacKage> createPackage(@Valid @RequestBody CreatePackageRequest request) {
-        PacKage createdPackage = packageService.createPackage(request);
+    public ResponseEntity<PackageResponseDto> create(@Valid @RequestBody PackageRequestDto request) {
+        PackageResponseDto createdPackage = packageService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPackage);
     }
-
 
 }

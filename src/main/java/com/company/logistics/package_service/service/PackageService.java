@@ -1,10 +1,9 @@
 package com.company.logistics.package_service.service;
 
-import com.company.logistics.package_service.dto.request.CreatePackageRequest;
-import com.company.logistics.package_service.entity.PacKage;
+import com.company.logistics.package_service.dto.PackageRequestDto;
+import com.company.logistics.package_service.dto.PackageResponseDto;
 
 public interface PackageService {
 
- PacKage createPackage(CreatePackageRequest request);
+    PackageResponseDto create(PackageRequestDto request);
 }
-
