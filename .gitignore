@@ -1,116 +1,9 @@
+# HELP.md (généré par Spring Boot)
 HELP.md
+
+# Maven
 target/
 .mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-### macOS ###
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-### Windows ###
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-*.stackdump
-
-### Linux ###
-*~
-.directory
-.Trash-*
-
-### Logs ###
-*.log
-logs/
-log/
-*.log.*
-
-### Application Logs ###
-application.log
-application-debug.log
-application-error.log
-
-### Environment Variables ###
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-### Database ###
-*.db
-*.sqlite
-*.sqlite3
-postgres_data/
-
-### Liquibase ###
-target/liquibase/
-
-### Application Specific ###
-# Spring Boot
-spring.log
-# Docker
-.dockerignore
-# Security
-secrets/
-*.key
-*.pem
-*.crt
-*.p12
-*.jks
-
-### Temporary Files ###
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
-
-### Build Artifacts ###
-*.jar
-*.war
-*.ear
-*.class
-*.o
-*.so
-*.dylib
-
-### Maven ###
-target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -119,68 +12,98 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/maven-wrapper.properties
-.mvnw.cmd
-.mvnw
-.gitattributes
-### Gradle (if ever switched) ###
+
+# Gradle (au cas où)
 .gradle/
 build/
-gradle-app.setting
-!gradle-wrapper.jar
-!gradle-wrapper.properties
+!gradle/wrapper/gradle-wrapper.jar
 
-### Eclipse ###
-.metadata
-bin/
-tmp/
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
+# Build outputs
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.class
+
+# IDE
+## IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+## Eclipse
+.classpath
+.project
 .settings/
-.loadpath
-.recommenders
+.factorypath
 
-### Emacs ###
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
+## VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
-### Vim ###
+## Autres
 *.swp
 *.swo
 *~
+.DS_Store
+Thumbs.db
 
+# Logs
+logs/
+*.log
+log/
+*.log.*
+spring.log
 
-### Node.js (if frontend added later) ###
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
+# Environnement
+.env
+.env.local
+.env.*.local
 
-### Python (if scripts added) ###
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# Database
+*.db
+*.sqlite
+postgres_data/
+mysql_data/
 
-### Backup Files ###
+# Docker
+## À IGNORER
+docker-compose.override.yml
+docker-compose.*.yml
+docker-compose.log
+.dockerignore
+
+## À CONSERVER (ne pas ignorer)
+# docker-compose.yml
+# Dockerfile
+
+# Application
+secrets/
+*.key
+*.pem
+*.crt
+
+# Temporary
+*.tmp
+*.temp
 *.bak
 *.backup
-*.orig
-*.old
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Test
+**/test-results/
+**/reports/
+.coverage

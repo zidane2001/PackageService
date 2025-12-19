@@ -22,6 +22,7 @@ public class PackageRequestDto {
     @Max(value = 10000, message = "Weight must not exceed 10000")
     private Double weight;
 
+    @NotNull
     private Boolean isFragile;
 
     @NotNull

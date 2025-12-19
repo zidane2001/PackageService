@@ -1,27 +1,53 @@
 package com.company.logistics.package_service.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
 
-import com.company.logistics.package_service.dto.PackageRequestDto;
-import com.company.logistics.package_service.dto.PackageResponseDto;
 import com.company.logistics.package_service.entity.Package;
-import com.company.logistics.package_service.mapper.PackageMapper;
 import com.company.logistics.package_service.repository.PackageRepository;
 import com.company.logistics.package_service.service.PackageService;
-
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
 public class PackageServiceImpl implements PackageService {
 
    private final PackageRepository packageRepository;
-   private final PackageMapper packageMapper;
 
    @Override
-   public PackageResponseDto create(PackageRequestDto request) {
-      Package entity = packageMapper.toEntity(request);
-      Package saved = packageRepository.save(entity);
-      return packageMapper.toDto(saved);
+   @Transactional
+   public Package create(Package entity) {
+      return packageRepository.save(entity);
+   }
+
+   @Override
+   public Package getById(Long id) {
+      return packageRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Package not found with id: " + id));
+   }
+
+   @Override
+   public Page<Package> getAll(Pageable pageable) {
+      return packageRepository.findAll(pageable);
+   }
+
+   @Override
+   @Transactional
+   public Package update(Package entity) {
+      if (!packageRepository.existsById(entity.getId())) {
+         throw new RuntimeException("Package not found with id: " + entity.getId());
+      }
+      return packageRepository.save(entity); 
+   }
+
+   @Override
+   @Transactional
+   public void delete(Long id) {
+      if (!packageRepository.existsById(id)) {
+         throw new RuntimeException("Package not found with id: " + id);
+      }
+      packageRepository.deleteById(id);
    }
 }

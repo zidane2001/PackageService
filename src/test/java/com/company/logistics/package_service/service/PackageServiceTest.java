@@ -1,10 +1,7 @@
 package com.company.logistics.package_service.service;
 
 import com.company.logistics.package_service.common.PackageStatus;
-import com.company.logistics.package_service.dto.PackageRequestDto;
-import com.company.logistics.package_service.dto.PackageResponseDto;
 import com.company.logistics.package_service.entity.Package;
-import com.company.logistics.package_service.mapper.PackageMapper;
 import com.company.logistics.package_service.repository.PackageRepository;
 import com.company.logistics.package_service.service.impl.PackageServiceImpl;
 
@@ -13,7 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,117 +24,195 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PackageServiceTest {
 
-        @Mock
-        private PackageRepository packageRepository;
+    @Mock
+    private PackageRepository packageRepository;
 
-        @Mock
-        private PackageMapper packageMapper;
+    @InjectMocks
+    private PackageServiceImpl packageService;
 
-        @InjectMocks
-        private PackageServiceImpl packageService;
+    @Test
+    void successfully_create() {
+        // Arrange - Création d'une ENTITÉ (pas de DTO)
+        Package entity = Package.builder()
+                .description("Ordinateur portable")
+                .weight(2.5)
+                .isFragile(true)
+                .status(PackageStatus.CREATED)
+                .build();
 
-        @Test
-        void successfully_create() {
-             
-                PackageRequestDto request = new PackageRequestDto(
-                                "Ordinateur portable",
-                                2.5,
-                                true,
-                                PackageStatus.CREATED);
+        Package savedEntity = Package.builder()
+                .id(1L)
+                .description("Ordinateur portable")
+                .weight(2.5)
+                .isFragile(true)
+                .status(PackageStatus.CREATED)
+                .build();
 
-                Package entity = Package.builder()
-                                .description("Ordinateur portable")
-                                .weight(2.5)
-                                .isFragile(true)
-                                .status(PackageStatus.CREATED)
-                                .build();
+      
+        when(packageRepository.save(entity)).thenReturn(savedEntity);
 
-                Package savedEntity = Package.builder()
-                                .id(1L)
-                                .description("Ordinateur portable")
-                                .weight(2.5)
-                                .isFragile(true)
-                                .status(PackageStatus.CREATED)
-                                .build();
+      
+        Package result = packageService.create(entity);
 
-                PackageResponseDto expectedResponse = new PackageResponseDto(
-                                1L,
-                                "Ordinateur portable",
-                                2.5,
-                                true,
-                                PackageStatus.CREATED);
+    
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("Ordinateur portable", result.getDescription());
+        assertEquals(2.5, result.getWeight());
+        assertTrue(result.getIsFragile());
+        assertEquals(PackageStatus.CREATED, result.getStatus());
 
-             
-                when(packageMapper.toEntity(request)).thenReturn(entity);
-                when(packageRepository.save(entity)).thenReturn(savedEntity);
-                when(packageMapper.toDto(savedEntity)).thenReturn(expectedResponse);
+       
+        verify(packageRepository, times(1)).save(entity);
+    }
 
-            
-                PackageResponseDto result = packageService.create(request);
+    @Test
+    void getById_successfully_returns_package() {
+      
+        Long packageId = 1L;
+        Package entity = Package.builder()
+                .id(packageId)
+                .description("Ordinateur portable")
+                .weight(2.5)
+                .isFragile(true)
+                .status(PackageStatus.CREATED)
+                .build();
 
-            
-                assertNotNull(result);
-                assertEquals(1L, result.getId());
-                assertEquals("Ordinateur portable", result.getDescription());
-                assertEquals(2.5, result.getWeight());
-                assertTrue(result.getIsFragile());
-                assertEquals(PackageStatus.CREATED, result.getStatus());
+        when(packageRepository.findById(packageId)).thenReturn(Optional.of(entity));
 
-                verify(packageMapper, times(1)).toEntity(request);
-                verify(packageRepository, times(1)).save(entity);
-                verify(packageMapper, times(1)).toDto(savedEntity);
-        }
+        
+        Package result = packageService.getById(packageId);
 
-        @Test
-        void getById_successfully_returns_package() {
-           
-                Long packageId = 1L;
-                Package entity = Package.builder()
-                                .id(packageId)
-                                .description("Ordinateur portable")
-                                .weight(2.5)
-                                .isFragile(true)
-                                .status(PackageStatus.CREATED)
-                                .build();
+      
+        assertNotNull(result);
+        assertEquals(packageId, result.getId());
+        assertEquals("Ordinateur portable", result.getDescription());
+        assertEquals(2.5, result.getWeight());
+        assertTrue(result.getIsFragile());
+        assertEquals(PackageStatus.CREATED, result.getStatus());
 
-                PackageResponseDto expectedResponse = new PackageResponseDto(
-                                packageId,
-                                "Ordinateur portable",
-                                2.5,
-                                true,
-                                PackageStatus.CREATED);
+        verify(packageRepository, times(1)).findById(packageId);
+    }
 
-            
-                when(packageRepository.findById(packageId)).thenReturn(Optional.of(entity));
-                when(packageMapper.toDto(entity)).thenReturn(expectedResponse);
+    @Test
+    void getById_throws_exception_when_package_not_found() {
+     
+        Long packageId = 999L;
+        when(packageRepository.findById(packageId)).thenReturn(Optional.empty());
 
-           
-                PackageResponseDto result = packageService.getById(packageId);
+     
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> packageService.getById(packageId));
 
-               
-                assertNotNull(result);
-                assertEquals(packageId, result.getId());
-                assertEquals("Ordinateur portable", result.getDescription());
-                assertEquals(2.5, result.getWeight());
-                assertTrue(result.getIsFragile());
-                assertEquals(PackageStatus.CREATED, result.getStatus());
+        assertEquals("Package not found with id: 999", exception.getMessage());
+        verify(packageRepository, times(1)).findById(packageId);
+    }
 
-                verify(packageRepository, times(1)).findById(packageId);
-                verify(packageMapper, times(1)).toDto(entity);
-        }
+    @Test
+    void getAll_returns_page_of_packages() {
+      
+        Pageable pageable = PageRequest.of(0, 10);
+        Package entity = Package.builder()
+                .id(1L)
+                .description("Ordinateur portable")
+                .weight(2.5)
+                .isFragile(true)
+                .status(PackageStatus.CREATED)
+                .build();
+        Page<Package> page = new PageImpl<>(List.of(entity), pageable, 1);
 
-        @Test
-        void getById_throws_exception_when_package_not_found() {
-                
-                Long packageId = 999L;
-                when(packageRepository.findById(packageId)).thenReturn(Optional.empty());
+        when(packageRepository.findAll(pageable)).thenReturn(page);
 
-           
-                RuntimeException exception = assertThrows(RuntimeException.class,
-                                () -> packageService.getById(packageId));
+      
+        Page<Package> result = packageService.getAll(pageable);
 
-                assertEquals("Package not found with id: 999", exception.getMessage());
-                verify(packageRepository, times(1)).findById(packageId);
-                verify(packageMapper, never()).toDto(any());
-        }
+     
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals(entity, result.getContent().get(0));
+
+        verify(packageRepository, times(1)).findAll(pageable);
+    }
+
+    @Test
+    void update_successfully_updates_package() {
+       
+        Package entity = Package.builder()
+                .id(1L)
+                .description("Ordinateur portable mis à jour")
+                .weight(3.0)
+                .isFragile(false) 
+                .status(PackageStatus.DELIVERED)
+                .build();
+
+        when(packageRepository.existsById(1L)).thenReturn(true);
+        when(packageRepository.save(entity)).thenReturn(entity);
+
+     
+        Package result = packageService.update(entity);
+
+   
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("Ordinateur portable mis à jour", result.getDescription());
+        assertEquals(3.0, result.getWeight());
+        assertFalse(result.getIsFragile());
+        assertEquals(PackageStatus.DELIVERED, result.getStatus());
+
+        verify(packageRepository, times(1)).existsById(1L);
+        verify(packageRepository, times(1)).save(entity);
+    }
+
+    @Test
+    void update_throws_exception_when_package_not_found() {
+     
+        Package entity = Package.builder()
+                .id(999L)
+                .description("Ordinateur portable")
+                .weight(2.5)
+                .isFragile(true)
+                .status(PackageStatus.CREATED)
+                .build();
+
+        when(packageRepository.existsById(999L)).thenReturn(false);
+
+      
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> packageService.update(entity));
+
+        assertEquals("Package not found with id: 999", exception.getMessage());
+        verify(packageRepository, times(1)).existsById(999L);
+        verify(packageRepository, never()).save(any());
+    }
+
+    @Test
+    void delete_successfully_deletes_package() {
+      
+        Long packageId = 1L;
+
+        when(packageRepository.existsById(packageId)).thenReturn(true);
+
+   
+        packageService.delete(packageId);
+
+     
+        verify(packageRepository, times(1)).existsById(packageId);
+        verify(packageRepository, times(1)).deleteById(packageId);
+    }
+
+    @Test
+    void delete_throws_exception_when_package_not_found() {
+     
+        Long packageId = 999L;
+
+        when(packageRepository.existsById(packageId)).thenReturn(false);
+
+     
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> packageService.delete(packageId));
+
+        assertEquals("Package not found with id: 999", exception.getMessage());
+        verify(packageRepository, times(1)).existsById(packageId);
+        verify(packageRepository, never()).deleteById(packageId);
+    }
 }
