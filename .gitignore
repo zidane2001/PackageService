@@ -1,6 +1,13 @@
 # HELP.md (généré par Spring Boot)
 HELP.md
 
+# Additional files to ignore
+.gitattributes
+maven-wrapper.properties
+README.md
+mvnw
+mvnw.cmd
+
 # Maven
 target/
 .mvn/wrapper/maven-wrapper.jar
