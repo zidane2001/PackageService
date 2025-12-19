@@ -1,6 +1,7 @@
 package com.company.logistics.package_service.dto;
 
-import com.company.logistics.package_service.entity.PackageStatus;
+import com.company.logistics.package_service.common.PackageStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,5 +1,7 @@
 package com.company.logistics.package_service.entity;
 
+import com.company.logistics.package_service.common.PackageStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -20,7 +22,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "Package")
+@Table(name = "package")
 public class Package {
 
     @Id
@@ -37,6 +39,7 @@ public class Package {
     @Max(value = 10000, message = "Weight must not exceed 10000")
     private Double weight;
 
+    @NotNull(message = "Fragile is mandatory")
     @Column(name = "fragile")
     private Boolean isFragile;
 

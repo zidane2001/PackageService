@@ -1,6 +1,6 @@
 package com.company.logistics.package_service.dto;
 
-import com.company.logistics.package_service.entity.PackageStatus;
+import com.company.logistics.package_service.common.PackageStatus;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

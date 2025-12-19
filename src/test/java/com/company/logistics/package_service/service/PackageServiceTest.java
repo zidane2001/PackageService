@@ -1,9 +1,9 @@
 package com.company.logistics.package_service.service;
 
+import com.company.logistics.package_service.common.PackageStatus;
 import com.company.logistics.package_service.dto.PackageRequestDto;
 import com.company.logistics.package_service.dto.PackageResponseDto;
 import com.company.logistics.package_service.entity.Package;
-import com.company.logistics.package_service.entity.PackageStatus;
 import com.company.logistics.package_service.mapper.PackageMapper;
 import com.company.logistics.package_service.repository.PackageRepository;
 import com.company.logistics.package_service.service.impl.PackageServiceImpl;
