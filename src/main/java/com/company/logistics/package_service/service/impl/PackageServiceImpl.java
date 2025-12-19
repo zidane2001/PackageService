@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import com.company.logistics.package_service.entity.Package;
+import com.company.logistics.package_service.exceptions.PackageNotFoundException;
 import com.company.logistics.package_service.repository.PackageRepository;
 import com.company.logistics.package_service.service.PackageService;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ public class PackageServiceImpl implements PackageService {
    @Override
    public Package getById(Long id) {
       return packageRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Package not found with id: " + id));
+            .orElseThrow(() -> new PackageNotFoundException("Package not found with id: " + id));
    }
 
    @Override
@@ -37,16 +38,16 @@ public class PackageServiceImpl implements PackageService {
    @Transactional
    public Package update(Package entity) {
       if (!packageRepository.existsById(entity.getId())) {
-         throw new RuntimeException("Package not found with id: " + entity.getId());
+         throw new PackageNotFoundException("Package not found with id: " + entity.getId());
       }
-      return packageRepository.save(entity); 
+      return packageRepository.save(entity);
    }
 
    @Override
    @Transactional
    public void delete(Long id) {
       if (!packageRepository.existsById(id)) {
-         throw new RuntimeException("Package not found with id: " + id);
+         throw new PackageNotFoundException("Package not found with id: " + id);
       }
       packageRepository.deleteById(id);
    }

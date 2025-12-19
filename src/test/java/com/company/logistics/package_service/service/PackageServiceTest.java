@@ -2,6 +2,7 @@ package com.company.logistics.package_service.service;
 
 import com.company.logistics.package_service.common.PackageStatus;
 import com.company.logistics.package_service.entity.Package;
+import com.company.logistics.package_service.exceptions.PackageNotFoundException;
 import com.company.logistics.package_service.repository.PackageRepository;
 import com.company.logistics.package_service.service.impl.PackageServiceImpl;
 
@@ -32,7 +33,7 @@ class PackageServiceTest {
 
     @Test
     void successfully_create() {
-        // Arrange - Création d'une ENTITÉ (pas de DTO)
+      
         Package entity = Package.builder()
                 .description("Ordinateur portable")
                 .weight(2.5)
@@ -48,13 +49,10 @@ class PackageServiceTest {
                 .status(PackageStatus.CREATED)
                 .build();
 
-      
         when(packageRepository.save(entity)).thenReturn(savedEntity);
 
-      
         Package result = packageService.create(entity);
 
-    
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals("Ordinateur portable", result.getDescription());
@@ -62,13 +60,12 @@ class PackageServiceTest {
         assertTrue(result.getIsFragile());
         assertEquals(PackageStatus.CREATED, result.getStatus());
 
-       
         verify(packageRepository, times(1)).save(entity);
     }
 
     @Test
     void getById_successfully_returns_package() {
-      
+
         Long packageId = 1L;
         Package entity = Package.builder()
                 .id(packageId)
@@ -80,10 +77,8 @@ class PackageServiceTest {
 
         when(packageRepository.findById(packageId)).thenReturn(Optional.of(entity));
 
-        
         Package result = packageService.getById(packageId);
 
-      
         assertNotNull(result);
         assertEquals(packageId, result.getId());
         assertEquals("Ordinateur portable", result.getDescription());
@@ -96,12 +91,11 @@ class PackageServiceTest {
 
     @Test
     void getById_throws_exception_when_package_not_found() {
-     
+
         Long packageId = 999L;
         when(packageRepository.findById(packageId)).thenReturn(Optional.empty());
 
-     
-        RuntimeException exception = assertThrows(RuntimeException.class,
+        PackageNotFoundException exception = assertThrows(PackageNotFoundException.class,
                 () -> packageService.getById(packageId));
 
         assertEquals("Package not found with id: 999", exception.getMessage());
@@ -110,7 +104,7 @@ class PackageServiceTest {
 
     @Test
     void getAll_returns_page_of_packages() {
-      
+
         Pageable pageable = PageRequest.of(0, 10);
         Package entity = Package.builder()
                 .id(1L)
@@ -123,10 +117,8 @@ class PackageServiceTest {
 
         when(packageRepository.findAll(pageable)).thenReturn(page);
 
-      
         Page<Package> result = packageService.getAll(pageable);
 
-     
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
         assertEquals(entity, result.getContent().get(0));
@@ -136,22 +128,20 @@ class PackageServiceTest {
 
     @Test
     void update_successfully_updates_package() {
-       
+
         Package entity = Package.builder()
                 .id(1L)
                 .description("Ordinateur portable mis à jour")
                 .weight(3.0)
-                .isFragile(false) 
+                .isFragile(false)
                 .status(PackageStatus.DELIVERED)
                 .build();
 
         when(packageRepository.existsById(1L)).thenReturn(true);
         when(packageRepository.save(entity)).thenReturn(entity);
 
-     
         Package result = packageService.update(entity);
 
-   
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals("Ordinateur portable mis à jour", result.getDescription());
@@ -165,7 +155,7 @@ class PackageServiceTest {
 
     @Test
     void update_throws_exception_when_package_not_found() {
-     
+
         Package entity = Package.builder()
                 .id(999L)
                 .description("Ordinateur portable")
@@ -176,8 +166,7 @@ class PackageServiceTest {
 
         when(packageRepository.existsById(999L)).thenReturn(false);
 
-      
-        RuntimeException exception = assertThrows(RuntimeException.class,
+        PackageNotFoundException exception = assertThrows(PackageNotFoundException.class,
                 () -> packageService.update(entity));
 
         assertEquals("Package not found with id: 999", exception.getMessage());
@@ -187,28 +176,25 @@ class PackageServiceTest {
 
     @Test
     void delete_successfully_deletes_package() {
-      
+
         Long packageId = 1L;
 
         when(packageRepository.existsById(packageId)).thenReturn(true);
 
-   
         packageService.delete(packageId);
 
-     
         verify(packageRepository, times(1)).existsById(packageId);
         verify(packageRepository, times(1)).deleteById(packageId);
     }
 
     @Test
     void delete_throws_exception_when_package_not_found() {
-     
+
         Long packageId = 999L;
 
         when(packageRepository.existsById(packageId)).thenReturn(false);
 
-     
-        RuntimeException exception = assertThrows(RuntimeException.class,
+        PackageNotFoundException exception = assertThrows(PackageNotFoundException.class,
                 () -> packageService.delete(packageId));
 
         assertEquals("Package not found with id: 999", exception.getMessage());

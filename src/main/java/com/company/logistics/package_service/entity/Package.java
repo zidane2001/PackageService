@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -47,5 +48,8 @@ public class Package {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Status is mandatory")
     private PackageStatus status;
+
+    @Version
+    private Long version;
 
 }
