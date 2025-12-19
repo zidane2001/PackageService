@@ -2,6 +2,8 @@ package com.company.logistics.package_service.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -39,6 +41,7 @@ public class Package {
     private Boolean isFragile;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Status is mandatory")
     private PackageStatus status;
 
