@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 @RequiredArgsConstructor
 public class PackageServiceImpl implements PackageService {
 
+   private static final String PACKAGE_NOT_FOUND_MESSAGE = "Package not found with id: ";
+
    private final PackageRepository packageRepository;
 
    @Override
@@ -26,7 +28,7 @@ public class PackageServiceImpl implements PackageService {
    @Override
    public Package getById(Long id) {
       return packageRepository.findById(id)
-            .orElseThrow(() -> new PackageNotFoundException("Package not found with id: " + id));
+            .orElseThrow(() -> new PackageNotFoundException(PACKAGE_NOT_FOUND_MESSAGE + id));
    }
 
    @Override
@@ -38,7 +40,7 @@ public class PackageServiceImpl implements PackageService {
    @Transactional
    public Package update(Package entity) {
       if (!packageRepository.existsById(entity.getId())) {
-         throw new PackageNotFoundException("Package not found with id: " + entity.getId());
+         throw new PackageNotFoundException(PACKAGE_NOT_FOUND_MESSAGE + entity.getId());
       }
       return packageRepository.save(entity);
    }
@@ -47,7 +49,7 @@ public class PackageServiceImpl implements PackageService {
    @Transactional
    public void delete(Long id) {
       if (!packageRepository.existsById(id)) {
-         throw new PackageNotFoundException("Package not found with id: " + id);
+         throw new PackageNotFoundException(PACKAGE_NOT_FOUND_MESSAGE + id);
       }
       packageRepository.deleteById(id);
    }

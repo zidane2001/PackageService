@@ -40,8 +40,7 @@ public class PackageController {
     @GetMapping
     public ResponseEntity<Page<PackageResponseDto>> getAll(Pageable pageable) {
         Page<Package> entities = packageService.getAll(pageable);
-        Page<PackageResponseDto> responseDtos = entities.map(packageMapper::toDto);
-        return ResponseEntity.ok(responseDtos);
+        return ResponseEntity.ok(packageMapper.toDtoPage(entities));
     }
 
     @PutMapping("/{id}")
