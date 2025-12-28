@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
-import com.company.logistics.package_service.entity.Package;
+import com.company.logistics.package_service.entity.Packages;
 import com.company.logistics.package_service.exceptions.PackageNotFoundException;
 import com.company.logistics.package_service.repository.PackageRepository;
 import com.company.logistics.package_service.service.PackageService;
@@ -21,26 +21,27 @@ public class PackageServiceImpl implements PackageService {
 
    @Override
    @Transactional
-   public Package create(Package entity) {
+   public Packages create(Packages entity) {
       return packageRepository.save(entity);
    }
 
    @Override
-   public Package getById(Long id) {
+   public Packages getById(Long id) {
       return packageRepository.findById(id)
             .orElseThrow(() -> new PackageNotFoundException(PACKAGE_NOT_FOUND_MESSAGE + id));
    }
 
    @Override
-   public Page<Package> getAll(Pageable pageable) {
+   public Page<Packages> getAll(Pageable pageable) {
       return packageRepository.findAll(pageable);
    }
 
    @Override
    @Transactional
-   public Package update(Package entity) {
-      if (!packageRepository.existsById(entity.getId())) {
-         throw new PackageNotFoundException(PACKAGE_NOT_FOUND_MESSAGE + entity.getId());
+   public Packages update(Long id, Packages entity) {
+      entity.setId(id);
+      if (!packageRepository.existsById(id)) {
+         throw new PackageNotFoundException(PACKAGE_NOT_FOUND_MESSAGE + id);
       }
       return packageRepository.save(entity);
    }

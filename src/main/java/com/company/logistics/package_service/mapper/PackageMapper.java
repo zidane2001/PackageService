@@ -1,25 +1,26 @@
 package com.company.logistics.package_service.mapper;
 
+import com.company.logistics.package_service.dto.PackageFeignDto;
 import com.company.logistics.package_service.dto.PackageRequestDto;
 import com.company.logistics.package_service.dto.PackageResponseDto;
-import com.company.logistics.package_service.entity.Package;
+import com.company.logistics.package_service.entity.Packages;
 
+import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.data.domain.Page;
 
 @Mapper(componentModel = "spring")
 public interface PackageMapper {
 
-    @Mapping(target = "id", ignore = true)
-    Package toEntity(PackageRequestDto request);
+  @Mapping(target = "id", ignore = true)
+  @Mapping(source = "isFragile", target = "isFragile")
+  Packages toEntity(PackageRequestDto request);
 
-    PackageResponseDto toDto(Package entity);
+  PackageResponseDto toDto(Packages entity);
 
-
-    default Page<PackageResponseDto> toDtoPage(Page<Package> entities) {
-        return entities.map(this::toDto);
-    }
-
+  List<PackageResponseDto> toDtoList(List<Packages> entities);
+  @Mapping(source = "isFragile", target = "isFragile")
+  @Mapping(source = "status", target = "status")
+  PackageFeignDto toFeignDto(Packages entity);
 }

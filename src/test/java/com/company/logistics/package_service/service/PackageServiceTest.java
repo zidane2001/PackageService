@@ -1,7 +1,7 @@
 package com.company.logistics.package_service.service;
 
 import com.company.logistics.package_service.common.PackageStatus;
-import com.company.logistics.package_service.entity.Package;
+import com.company.logistics.package_service.entity.Packages;
 import com.company.logistics.package_service.exceptions.PackageNotFoundException;
 import com.company.logistics.package_service.repository.PackageRepository;
 import com.company.logistics.package_service.service.impl.PackageServiceImpl;
@@ -33,15 +33,15 @@ class PackageServiceTest {
 
     @Test
     void successfully_create() {
-      
-        Package entity = Package.builder()
+
+        Packages entity = Packages.builder()
                 .description("Ordinateur portable")
                 .weight(2.5)
                 .isFragile(true)
                 .status(PackageStatus.CREATED)
                 .build();
 
-        Package savedEntity = Package.builder()
+        Packages savedEntity = Packages.builder()
                 .id(1L)
                 .description("Ordinateur portable")
                 .weight(2.5)
@@ -51,7 +51,7 @@ class PackageServiceTest {
 
         when(packageRepository.save(entity)).thenReturn(savedEntity);
 
-        Package result = packageService.create(entity);
+        Packages result = packageService.create(entity);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
@@ -67,7 +67,7 @@ class PackageServiceTest {
     void getById_successfully_returns_package() {
 
         Long packageId = 1L;
-        Package entity = Package.builder()
+        Packages entity = Packages.builder()
                 .id(packageId)
                 .description("Ordinateur portable")
                 .weight(2.5)
@@ -77,7 +77,7 @@ class PackageServiceTest {
 
         when(packageRepository.findById(packageId)).thenReturn(Optional.of(entity));
 
-        Package result = packageService.getById(packageId);
+        Packages result = packageService.getById(packageId);
 
         assertNotNull(result);
         assertEquals(packageId, result.getId());
@@ -106,18 +106,18 @@ class PackageServiceTest {
     void getAll_returns_page_of_packages() {
 
         Pageable pageable = PageRequest.of(0, 10);
-        Package entity = Package.builder()
+        Packages entity = Packages.builder()
                 .id(1L)
                 .description("Ordinateur portable")
                 .weight(2.5)
                 .isFragile(true)
                 .status(PackageStatus.CREATED)
                 .build();
-        Page<Package> page = new PageImpl<>(List.of(entity), pageable, 1);
+        Page<Packages> page = new PageImpl<>(List.of(entity), pageable, 1);
 
         when(packageRepository.findAll(pageable)).thenReturn(page);
 
-        Page<Package> result = packageService.getAll(pageable);
+        Page<Packages> result = packageService.getAll(pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -129,7 +129,7 @@ class PackageServiceTest {
     @Test
     void update_successfully_updates_package() {
 
-        Package entity = Package.builder()
+        Packages entity = Packages.builder()
                 .id(1L)
                 .description("Ordinateur portable mis à jour")
                 .weight(3.0)
@@ -140,7 +140,7 @@ class PackageServiceTest {
         when(packageRepository.existsById(1L)).thenReturn(true);
         when(packageRepository.save(entity)).thenReturn(entity);
 
-        Package result = packageService.update(entity);
+        Packages result = packageService.update(entity.getId(), entity);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
@@ -156,7 +156,7 @@ class PackageServiceTest {
     @Test
     void update_throws_exception_when_package_not_found() {
 
-        Package entity = Package.builder()
+        Packages entity = Packages.builder()
                 .id(999L)
                 .description("Ordinateur portable")
                 .weight(2.5)
@@ -167,7 +167,7 @@ class PackageServiceTest {
         when(packageRepository.existsById(999L)).thenReturn(false);
 
         PackageNotFoundException exception = assertThrows(PackageNotFoundException.class,
-                () -> packageService.update(entity));
+                () -> packageService.update(entity.getId(), entity));
 
         assertEquals("Package not found with id: 999", exception.getMessage());
         verify(packageRepository, times(1)).existsById(999L);

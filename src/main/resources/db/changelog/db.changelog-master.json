@@ -2,12 +2,12 @@
     "databaseChangeLog": [
         {
             "changeSet": {
-                "id": "001-create-package-table",
+                "id": "001-create-package-table-v2",
                 "author": "package-service",
                 "changes": [
                     {
                         "createTable": {
-                            "tableName": "Package",
+                            "tableName": "packages",
                             "columns": [
                                 {
                                     "column": {
@@ -53,6 +53,7 @@
                                         }
                                     }
                                 }
+                               
                             ]
                         }
                     }

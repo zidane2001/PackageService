@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import com.company.logistics.package_service.dto.PackageFeignDto;
 import com.company.logistics.package_service.dto.PackageRequestDto;
 import com.company.logistics.package_service.dto.PackageResponseDto;
-import com.company.logistics.package_service.entity.Package;
+import com.company.logistics.package_service.entity.Packages;
 import com.company.logistics.package_service.mapper.PackageMapper;
 import com.company.logistics.package_service.service.PackageService;
 import org.springframework.data.domain.Page;
@@ -24,31 +25,30 @@ public class PackageController {
 
     @PostMapping
     public ResponseEntity<PackageResponseDto> create(@Valid @RequestBody PackageRequestDto request) {
-        Package entity = packageMapper.toEntity(request);
-        Package createdEntity = packageService.create(entity);
+        Packages entity = packageMapper.toEntity(request);
+        Packages createdEntity = packageService.create(entity);
         PackageResponseDto responseDto = packageMapper.toDto(createdEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PackageResponseDto> getById(@PathVariable Long id) {
-        Package entity = packageService.getById(id);
+        Packages entity = packageService.getById(id);
         PackageResponseDto responseDto = packageMapper.toDto(entity);
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping
     public ResponseEntity<Page<PackageResponseDto>> getAll(Pageable pageable) {
-        Page<Package> entities = packageService.getAll(pageable);
-        return ResponseEntity.ok(packageMapper.toDtoPage(entities));
+        Page<Packages> entities = packageService.getAll(pageable);
+        return ResponseEntity.ok(entities.map(packageMapper::toDto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PackageResponseDto> update(@PathVariable Long id,
             @Valid @RequestBody PackageRequestDto request) {
-        Package entity = packageMapper.toEntity(request);
-        entity.setId(id);
-        Package updatedEntity = packageService.update(entity);
+        Packages entity = packageMapper.toEntity(request);
+        Packages updatedEntity = packageService.update(id, entity);
         PackageResponseDto responseDto = packageMapper.toDto(updatedEntity);
         return ResponseEntity.ok(responseDto);
     }
@@ -57,5 +57,12 @@ public class PackageController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         packageService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/feign/{id}")
+    public ResponseEntity<PackageFeignDto> getForFeign(@PathVariable Long id) {
+        Packages entity = packageService.getById(id);
+        PackageFeignDto feignDto = packageMapper.toFeignDto(entity);
+        return ResponseEntity.ok(feignDto);
     }
 }

@@ -6,5 +6,4 @@ public enum PackageStatus {
     DELIVERED,
     LOST,
     DAMAGED
-
 }

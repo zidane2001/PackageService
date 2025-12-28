@@ -1,17 +1,16 @@
 package com.company.logistics.package_service.service;
 
-import com.company.logistics.package_service.entity.Package;
+import com.company.logistics.package_service.entity.Packages;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PackageService {
-    Package create(Package entity);
+    Packages create(Packages entity);
 
-    Package getById(Long id);
+    Packages getById(Long id);
 
-    Page<Package> getAll(Pageable pageable);
-
-    Package update(Package entity);
+    Page<Packages> getAll(Pageable pageable);
+    Packages update(Long id, Packages entity);
 
     void delete(Long id);
 }
