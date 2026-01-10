@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import com.company.logistics.package_service.dto.PackageFeignDto;
 import com.company.logistics.package_service.dto.PackageRequestDto;
 import com.company.logistics.package_service.dto.PackageResponseDto;
 import com.company.logistics.package_service.entity.Packages;
@@ -59,10 +58,4 @@ public class PackageController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/feign/{id}")
-    public ResponseEntity<PackageFeignDto> getForFeign(@PathVariable Long id) {
-        Packages entity = packageService.getById(id);
-        PackageFeignDto feignDto = packageMapper.toFeignDto(entity);
-        return ResponseEntity.ok(feignDto);
-    }
 }
