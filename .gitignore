@@ -1,0 +1,116 @@
+# HELP.md (généré par Spring Boot)
+HELP.md
+
+# Additional files to ignore
+.gitattributes
+maven-wrapper.properties
+README.md
+mvnw
+mvnw.cmd
+
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Gradle (au cas où)
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Build outputs
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.class
+
+# IDE
+## IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+## Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+
+## VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## Autres
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+log/
+*.log.*
+spring.log
+
+# Environnement
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+postgres_data/
+mysql_data/
+
+# Docker
+## À IGNORER
+docker-compose.override.yml
+docker-compose.*.yml
+docker-compose.log
+.dockerignore
+
+## À CONSERVER (ne pas ignorer)
+# docker-compose.yml
+# Dockerfile
+
+# Application
+secrets/
+*.key
+*.pem
+*.crt
+
+# Temporary
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Test
+**/test-results/
+**/reports/
+.coverage
